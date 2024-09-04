@@ -1,4 +1,6 @@
 #include <iostream>
+#include <windows.h>
+#pragma warning(disable : 4996)
 using namespace std;
 
 struct Employee
@@ -12,6 +14,23 @@ struct Employee
 void ShowMenu()
 {
 	cout << " 1. Show all employees " << endl << " 2. Search by surname " << endl << " 3. Search by payment " << endl << " 4. Sort by surnames " << endl << " 5. Add new employee " << endl << " 6. Delete employee " << endl << " 0. Exit " << endl;
+}
+
+void WriteEmployeeToFile(const Employee& employee)
+{
+	FILE* file = fopen("employee_list.txt", "a"); // Открытие файла для записи (добавление в конец файла)
+	if (file != nullptr)
+	{
+		fprintf(file, "%s ", employee.name);
+		fprintf(file, " %s ", employee.surname);
+		fprintf(file, " %s ", employee.phone);
+		fprintf(file, " %f ", employee.payment);
+		fputc('\n', file);
+		fclose(file);
+	}
+	else {
+		cout << "Error: Unable to open file for writing." << endl;
+	}
 }
 
 Employee create()
@@ -43,6 +62,7 @@ Employee create()
 	cin >> employee.payment;
 
 	delete[] name, surname, phone;
+	WriteEmployeeToFile(employee);
 	return employee;
 }
 
@@ -55,7 +75,8 @@ int main()
 		ShowMenu();
 		cout << " Enter your option: ";
 		cin >> option;
-
+		create();
+		
 	} while (true);
 	
 	
